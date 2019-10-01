@@ -4,7 +4,7 @@ namespace InGameDemo.WebApi.Data.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        ApplicationContext Context { get; }
+        InGameDemoContext Context { get; }
         void Commit();
     }
 }

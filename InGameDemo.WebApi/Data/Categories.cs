@@ -14,6 +14,7 @@ namespace InGameDemo.WebApi.Data
         public string Name { get; set; }
         public bool IsParent { get; set; }
         public int? ParentId { get; set; }
+        public DateTime? CreateDate { get; set; }
 
         public virtual Categories Parent { get; set; }
         public virtual ICollection<Categories> InverseParent { get; set; }

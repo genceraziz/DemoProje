@@ -50,7 +50,7 @@ namespace InGameDemo.WebApi
 
             #region EF Configurations
 
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<InGameDemoContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             #endregion
 

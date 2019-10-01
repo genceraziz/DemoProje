@@ -4,9 +4,9 @@ namespace InGameDemo.WebApi.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public ApplicationContext Context { get; }
+        public InGameDemoContext Context { get; }
 
-        public UnitOfWork(ApplicationContext context)
+        public UnitOfWork(InGameDemoContext context)
         {
             Context = context;
         }
