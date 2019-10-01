@@ -1,7 +1,20 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Kategoriler";
 }
 
-<h2>Kategoriler</h2>
-
+<div class="row">
+    <div class="col-md-12">
+        <h2>Kategoriler</h2>
+        <hr />
+        @if (!string.IsNullOrEmpty(ViewBag.CategoriesHTML))
+        {
+            @Html.Raw(ViewBag.CategoriesHTML)
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                <p>Henüz kategori yok. Kategori eklemek için <a asp-area="" asp-controller="Category" asp-action="CategoryManagement">tıklayınız</a></p>
+            </div>
+        }
+    </div>
+</div>

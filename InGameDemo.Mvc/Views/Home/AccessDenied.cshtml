@@ -8,9 +8,27 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>AccessDenied</title>
+    <title>Erişim Yetkiniz Yok !</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 </head>
 <body>
-    Erişim yetkiniz yok
+    <div class="container">
+        <div class="row">
+            <br /><br /><br /><br />
+            <div class="col-md-12">
+                <div class="text-center">
+                    <img src="~/images/access-denied.png" />
+                </div>
+                <div class="text-center text-danger">
+                    <p>! Giriş yapmak istediğiniz sayfaya erişim hakkınız yok. Lütfen tekrar giriş yapın ya da sistem yöneticisinden hak talep edin.</p>
+                </div>
+                <div class="text-center">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Ana Sayfa</a>
+                    <a asp-controller="Home" asp-action="LogOutAndLogin" class="btn btn-success">Giriş Sayfası</a>
+                    <a asp-controller="Home" asp-action="RequestAccess" class="btn btn-danger">Hak Talep Et :)</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

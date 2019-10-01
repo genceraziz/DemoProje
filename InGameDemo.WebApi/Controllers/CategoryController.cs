@@ -35,8 +35,6 @@ namespace InGameDemo.WebApi.Controllers
             try
             {
                 var model = new CategoryManagementViewForDto();
-
-                //model.Categories = _mapper.Map<IEnumerable<CategoryViewForDto>>(_unitOfWork.Context.Categories.FromSql("EXECUTE spCategories").ToList());
                 model.Categories = _mapper.Map<IEnumerable<CategoryViewForDto>>(await _unitOfWork.CategoryRepository.GetAll());
 
                 return Ok(model);
@@ -84,6 +82,22 @@ namespace InGameDemo.WebApi.Controllers
                     return BadRequest("Kategori eklenemedi. Lütfen daha sonra tekrar deneyiniz");
                 }
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("categories")]
+        public IActionResult Categories()
+        {
+            try
+            {
+                var categories = _mapper.Map<IEnumerable<CategoryViewForDto>>(_unitOfWork.Context.Categories.FromSql("EXECUTE spCategories").ToList());
+
+                return Ok(categories);
             }
             catch (Exception ex)
             {

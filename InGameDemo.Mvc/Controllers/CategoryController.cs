@@ -1,15 +1,14 @@
-﻿using System;
+﻿using InGameDemo.Core;
+using InGameDemo.Core.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using InGameDemo.Core.Constants;
-using InGameDemo.Core.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace InGameDemo.Mvc.Controllers
 {
@@ -23,8 +22,32 @@ namespace InGameDemo.Mvc.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var httpClinet = _httpClientFactory.CreateClient("ingamedemo");
+            httpClinet.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetToken());
+            var response = await httpClinet.GetAsync("category/categories");
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrEmpty(message)) message = "Beklenmedik bir hata meydana geldi. Lütfen daha sonra tekrar deneyiniz.";
+
+                AddSweetAlert("Beklenmedik bir durum oluştu", message, Models.Enums.NotificationType.warning);
+
+                return View(string.Empty);
+            }
+
+            var model = JsonConvert.DeserializeObject<IEnumerable<CategoryViewForDto>>(await response.Content.ReadAsStringAsync());
+
+            var html = string.Empty;
+
+            if (model != null && model.Any())
+            {
+                html = Tools.GenerateCategories(model);
+            }
+
+            ViewBag.CategoriesHTML = html;
+
             return View();
         }
 
@@ -53,7 +76,7 @@ namespace InGameDemo.Mvc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize()]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NewCategory(CategoryManagementViewForDto model)
         {

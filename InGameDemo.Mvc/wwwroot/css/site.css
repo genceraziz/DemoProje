@@ -107,4 +107,29 @@ a#logout {
         color: #fff;
     }
 
-/*#2aabe2*/
+#my-categories, .my-sub-categories {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.my-sub-categories {
+    margin-left: 30px;
+}
+
+    .my-sub-categories > li > a {
+        display: block;
+        padding: 2px 10px 2px 2px;
+        border-bottom: 1px solid #ddd;
+    }
+
+#my-categories > li {
+    border: 1px solid #ddd;
+}
+
+    #my-categories > li > a {
+        border: 1px solid #ddd;
+        display: block;
+        padding: 5px 10px 5px 5px;
+        background: #ddd;
+    }

@@ -146,6 +146,14 @@ namespace InGameDemo.Mvc.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> LogOutAndLogin()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Login");
+        }
+
+        [HttpGet]
         public IActionResult AccessDenied()
         {
             return View();
