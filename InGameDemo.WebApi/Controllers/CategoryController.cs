@@ -65,14 +65,10 @@ namespace InGameDemo.WebApi.Controllers
                 }
 
                 var dataModel = _mapper.Map<Categories>(model);
-                dataModel.Parent = null;
-                dataModel.InverseParent = null;
 
                 if (dataModel.ParentId.HasValue)
                 {
                     var parentCategory = await _unitOfWork.CategoryRepository.GetById(dataModel.ParentId.Value);
-                    parentCategory.Parent = null;
-                    parentCategory.InverseParent = null;
                     if (!parentCategory.IsParent)
                     {
                         parentCategory.IsParent = true;

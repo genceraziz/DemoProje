@@ -10,5 +10,7 @@ namespace InGameDemo.WebApi.Data.Interfaces
         Task<bool> Save();
 
         IGenericRepository<Categories> CategoryRepository { get; }
+
+        IGenericRepository<Products> ProductRepository { get; }
     }
 }

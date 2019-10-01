@@ -7,7 +7,7 @@ namespace InGameDemo.WebApi.Data
     {
         public Categories()
         {
-            InverseParent = new HashSet<Categories>();
+            Products = new HashSet<Products>();
         }
 
         public int Id { get; set; }
@@ -16,7 +16,6 @@ namespace InGameDemo.WebApi.Data
         public int? ParentId { get; set; }
         public DateTime? CreateDate { get; set; }
 
-        public virtual Categories Parent { get; set; }
-        public virtual ICollection<Categories> InverseParent { get; set; }
+        public virtual ICollection<Products> Products { get; set; }
     }
 }

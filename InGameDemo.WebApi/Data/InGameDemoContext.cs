@@ -23,6 +23,7 @@ namespace InGameDemo.WebApi.Data
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Categories> Categories { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -139,11 +140,30 @@ namespace InGameDemo.WebApi.Data
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
 
-                entity.HasOne(d => d.Parent)
-                    .WithMany(p => p.InverseParent)
-                    .HasForeignKey(d => d.ParentId)
-                    .HasConstraintName("FK_Categories_Categories");
+            modelBuilder.Entity<Products>(entity =>
+            {
+                entity.Property(e => e.CreateDate).HasMaxLength(10);
+
+                entity.Property(e => e.Description).IsUnicode(false);
+
+                entity.Property(e => e.ImageUrl)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 6)");
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Products_Categories");
             });
         }
     }

@@ -8,6 +8,8 @@ namespace InGameDemo.WebApi.Data
     {
         private IGenericRepository<Categories> _categoryRepository;
 
+        private IGenericRepository<Products> _productRepository;
+
         public UnitOfWork(InGameDemoContext context)
         {
             Context = context;
@@ -25,6 +27,19 @@ namespace InGameDemo.WebApi.Data
                 }
 
                 return _categoryRepository;
+            }
+        }
+
+        public IGenericRepository<Products> ProductRepository
+        {
+            get
+            {
+                if (_productRepository == null)
+                {
+                    _productRepository = new GenericRepository<Products>(Context);
+                }
+
+                return _productRepository;
             }
         }
 
