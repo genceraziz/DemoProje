@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace InGameDemo.WebApi.Data.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
         InGameDemoContext Context { get; }
-        void Commit();
+
+        Task<bool> Save();
+
+        IGenericRepository<Categories> CategoryRepository { get; }
     }
 }

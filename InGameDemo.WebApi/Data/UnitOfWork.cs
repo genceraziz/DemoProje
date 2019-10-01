@@ -1,19 +1,45 @@
 ﻿using InGameDemo.WebApi.Data.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace InGameDemo.WebApi.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public InGameDemoContext Context { get; }
+        private IGenericRepository<Categories> _categoryRepository;
 
         public UnitOfWork(InGameDemoContext context)
         {
             Context = context;
         }
 
-        public void Commit()
+        public InGameDemoContext Context { get; private set; }
+
+        public IGenericRepository<Categories> CategoryRepository
         {
-            Context.SaveChanges();
+            get
+            {
+                if (_categoryRepository == null)
+                {
+                    _categoryRepository = new GenericRepository<Categories>(Context);
+                }
+
+                return _categoryRepository;
+            }
+        }
+
+        public async Task<bool> Save()
+        {
+            try
+            {
+                int save = await Context.SaveChangesAsync();
+
+                return await Task.FromResult(save > 0);
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(false);
+            }
         }
 
         public void Dispose()

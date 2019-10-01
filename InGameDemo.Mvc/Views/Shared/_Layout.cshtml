@@ -15,6 +15,8 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 </head>
 <body>
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -45,7 +47,6 @@
                         var userRoles = userRole.Split(",");
 
                         <li><a href="javascript:void(0)"><span class="glyphicon glyphicon-user"></span> Merhaba, @User.Identity.Name</a></li>
-                        <li><a asp-area="" asp-controller="Account" asp-action="User" id="user-information"><span class="glyphicon glyphicon-info-sign"></span> Bilgilerim</a></li>
                         <li><a asp-area="" asp-controller="Product" asp-action="NewProduct" id="new-product"><span class="glyphicon glyphicon-plus"></span> Ürün Ekle</a></li>
 
                         @if (userRoles.Contains(InGameDemo.Core.Constants.Roles.Admin))
@@ -90,6 +91,10 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     <script src="~/sweetalert/sweetalert.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.19/i18n/Turkish.json"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    
     @if (TempData["notification"] != null)
     {
         <script type="text/javascript">

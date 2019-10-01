@@ -1,5 +1,7 @@
-﻿using InGameDemo.Core.Models;
+﻿using AutoMapper;
+using InGameDemo.Core.Models;
 using InGameDemo.WebApi.Data;
+using InGameDemo.WebApi.Data.Interfaces;
 using InGameDemo.WebApi.Infrastructure.IndentityValidator;
 using InGameDemo.WebApi.Infrastructure.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -89,7 +91,19 @@ namespace InGameDemo.WebApi
 
             #endregion
 
+            #region DI
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            #endregion
+
             services.AddMvc();
+
+            #region AutoMapper
+
+            services.AddAutoMapper();
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,4 @@
-﻿
+﻿@model InGameDemo.Core.Models.CategoryManagementViewForDto
 @{
     ViewData["Title"] = "Kategori Yönetimi";
 }
@@ -14,21 +14,88 @@
                 <tr>
                     <th>Id</th>
                     <th>Kategori Adı</th>
-                    <th>Alt Kategori Mi</th>
+                    <th class="text-center">Alt Kategori Mi</th>
                     <th>Üst Kategori Adı</th>
-                    <th>İşlem</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                @if (Model.Categories != null && Model.Categories.Any())
+                {
+                    foreach (var category in Model.Categories)
+                    {
+                        <tr>
+                            <td>@category.Id</td>
+                            <td>@category.Name</td>
+                            <td class="text-center">
+                                @if (category.ParentId.HasValue)
+                                {
+                                    <span class="glyphicon glyphicon-ok text-success"></span>
+                                }
+                                else
+                                {
+                                    <span class="glyphicon glyphicon-remove text-danger"></span>
+                                }
+                            </td>
+                            <td>@category.ParentName</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">Hiç kategori kaydı bulunamadı</td>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
     <div class="col-md-4">
+        <h4><span class="glyphicon glyphicon-plus"></span> Yeni Kategori EKle</h4>
+        <hr />
+        <div class="text-danger" asp-validation-summary="All"></div>
         <form asp-action="NewCategory" method="post">
+            
+            <div class="form-group">
+                <label asp-for="Category.Name">Kategori Adı</label>
+                <input asp-for="Category.Name" class="form-control" />
+            </div>
 
             <div class="form-group">
+                <div class="checkbox">
+                    <label><input asp-for="Category.IsParent"> Alt Kategori Mi ?</label>
+                </div>
+            </div>
 
+            <div class="form-group">
+                <label asp-for="Category.ParentId">Üst Kategori</label>
+                <select asp-for="Category.ParentId" class="form-control">
+                    <option value="">Seçiniz</option>
+                    @if (Model.Categories != null && Model.Categories.Any())
+                    {
+                        foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="pull-right">
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Ekle</button>
             </div>
 
         </form>
     </div>
 </div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('table').DataTable({
+                "language": {
+                    "url": "/js/datatable-language.json"
+                }
+            });
+        });
+    </script>
+}
