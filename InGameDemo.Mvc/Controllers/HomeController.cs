@@ -118,7 +118,7 @@ namespace InGameDemo.Mvc.Controllers
                         var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         var principal = new ClaimsPrincipal(userIdentity);
 
-                        await HttpContext.SignInAsync(principal, new AuthenticationProperties { IsPersistent = true, ExpiresUtc = userInfo.ExpireDate });
+                        await HttpContext.SignInAsync(principal, new AuthenticationProperties { ExpiresUtc = userInfo.ExpireDate, IssuedUtc = userInfo.ExpireDate,  });
 
                         if (!string.IsNullOrEmpty(model.ReturnUrl))
                         {
