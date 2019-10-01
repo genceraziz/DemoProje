@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "Kategori Yönetimi";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Kategori Yönetimi</h2>
+        <hr />
+    </div>
+    <div class="col-md-8">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Kategori Adı</th>
+                    <th>Alt Kategori Mi</th>
+                    <th>Üst Kategori Adı</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <form asp-action="NewCategory" method="post">
+
+            <div class="form-group">
+
+            </div>
+
+        </form>
+    </div>
+</div>
