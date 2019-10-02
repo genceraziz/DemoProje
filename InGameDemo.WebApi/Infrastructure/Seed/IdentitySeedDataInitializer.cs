@@ -1,24 +1,33 @@
-﻿using InGameDemo.WebApi.Data;
+﻿using InGameDemo.Core.Models;
+using InGameDemo.WebApi.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace InGameDemo.WebApi.Infrastructure.Seed
 {
-    public static class IdentitySeedDataInitializer
+    public class IdentitySeedDataInitializer
     {
-        public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private AppSettings _appSettings;
+
+        public IdentitySeedDataInitializer(IOptions<AppSettings> appSettings)
+        {
+            _appSettings = appSettings.Value;
+        }
+
+        public void SeedData(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
         }
 
-        private static void SeedUsers(UserManager<ApplicationUser> userManager)
+        private void SeedUsers(UserManager<ApplicationUser> userManager)
         {
             if (userManager.FindByNameAsync("ingame").Result == null)
             {
                 var user = new ApplicationUser
                 {
                     UserName = "ingame",
-                    Email = "azizgencerr@gmail.com"
+                    Email = _appSettings.SystemUserEmail
                 };
 
                 var result = userManager.CreateAsync(user, "gamer_1").Result;
@@ -30,7 +39,7 @@ namespace InGameDemo.WebApi.Infrastructure.Seed
             }
         }
 
-        private static void SeedRoles(RoleManager<IdentityRole> roleManager)
+        private void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
             if (!roleManager.RoleExistsAsync("Admin").Result)
             {

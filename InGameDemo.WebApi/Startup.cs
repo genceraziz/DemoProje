@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
@@ -107,7 +108,7 @@ namespace InGameDemo.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<AppSettings> appSettings)
         {
             if (env.IsDevelopment())
             {
@@ -119,7 +120,8 @@ namespace InGameDemo.WebApi
             app.UseAuthentication();
 
             // Seed data.
-            IdentitySeedDataInitializer.SeedData(userManager, roleManager);
+            var seedDataInitialize = new IdentitySeedDataInitializer(appSettings);
+            seedDataInitialize.SeedData(userManager, roleManager);
 
             app.UseMvc(options =>
             {

@@ -59,6 +59,7 @@ namespace InGameDemo.Mvc
 
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IAccountService, AccountService>();
 
             #endregion
         }

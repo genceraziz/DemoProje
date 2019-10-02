@@ -1,5 +1,6 @@
 ﻿using InGameDemo.Core.Models;
 using InGameDemo.Mvc.Models;
+using InGameDemo.Mvc.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -21,10 +21,12 @@ namespace InGameDemo.Mvc.Controllers
     public class HomeController : BaseController
     {
         private IHttpClientFactory _httpClientFactory;
+        private IAccountService _accountService;
 
-        public HomeController(IHttpClientFactory httpClientFactory)
+        public HomeController(IHttpClientFactory httpClientFactory, IAccountService accountService)
         {
             _httpClientFactory = httpClientFactory;
+            _accountService = accountService;
         }
 
         public IActionResult Index()
@@ -118,7 +120,7 @@ namespace InGameDemo.Mvc.Controllers
                         var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         var principal = new ClaimsPrincipal(userIdentity);
 
-                        await HttpContext.SignInAsync(principal, new AuthenticationProperties { ExpiresUtc = userInfo.ExpireDate, IssuedUtc = userInfo.ExpireDate,  });
+                        await HttpContext.SignInAsync(principal, new AuthenticationProperties { ExpiresUtc = userInfo.ExpireDate, IssuedUtc = userInfo.ExpireDate, });
 
                         if (!string.IsNullOrEmpty(model.ReturnUrl))
                         {
@@ -232,6 +234,21 @@ namespace InGameDemo.Mvc.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RequestAccess()
+        {
+            var serRes = await _accountService.RequestAccess(GetToken(), GetUserName());
+            if (serRes.ResultStatus.Status != Enums.ResultStatus.Success)
+            {
+                AddSweetAlert("", serRes.ResultStatus.Explanation, NotificationType.warning);
+                return RedirectToAction("Index", "Home");
+            }
+
+            AddSweetAlert("", "Hakkınızı alacaksınız. Sistem yöneticisine mail atıldı.", NotificationType.success);
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

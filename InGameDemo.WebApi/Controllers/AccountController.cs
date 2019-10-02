@@ -1,10 +1,14 @@
-﻿using InGameDemo.Core.Models;
+﻿using AutoMapper;
+using InGameDemo.Core.Models;
 using InGameDemo.WebApi.Data;
+using InGameDemo.WebApi.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -21,13 +25,18 @@ namespace InGameDemo.WebApi.Controllers
     {
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
+        private RoleManager<IdentityRole> _roleManager;
         private AppSettings _appSettings;
+        private IMapper _mapper;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<AppSettings> appSettings)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+                                IOptions<AppSettings> appSettings, RoleManager<IdentityRole> roleManager, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appSettings = appSettings.Value;
+            _roleManager = roleManager;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -150,25 +159,9 @@ namespace InGameDemo.WebApi.Controllers
 
                 var passResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var resetLink = "http://localhost:1453/Home/ResetPassword?token=" + passResetToken;
+                var mailBody = $"Merhaba {user.UserName}, <br> Şifre sıfırlama linkiniz aşağıdaki gibidir. Eğer şifre sıfırlama linkini siz talep etmediyseniz lütfen bu maili dikkate almayınız. <br><br> {resetLink} <br><br> Teşekkürler, <br> InGame Group";
 
-                using (var mailMessage = new MailMessage())
-                {
-                    mailMessage.To.Add(new MailAddress(user.Email, user.UserName));
-                    mailMessage.From = new MailAddress("ingamedemoproje@gmail.com", "InGame");
-                    mailMessage.Subject = "InGame - Şifre Sıfırlama Linki";
-                    mailMessage.Body = $"Merhaba {user.UserName}, <br> Şifre sıfırlama linkiniz aşağıdaki gibidir. Eğer şifre sıfırlama linkini siz talep etmediyseniz lütfen bu maili dikkate almayınız. <br><br> {resetLink} <br><br> Teşekkürler, <br> InGame Group";
-                    mailMessage.IsBodyHtml = true;
-                    mailMessage.Priority = MailPriority.High;
-
-                    using (var mailClient = new SmtpClient("smtp.gmail.com"))
-                    {
-                        mailClient.Port = 587;
-                        mailClient.Credentials = new NetworkCredential("ingamedemoproje@gmail.com", "12346ingame");
-                        mailClient.EnableSsl = true;
-
-                        await mailClient.SendMailAsync(mailMessage);
-                    }
-                }
+                Tools.SendEmail(mailBody, user.Email, user.UserName);
 
                 return Ok();
             }
@@ -201,6 +194,85 @@ namespace InGameDemo.WebApi.Controllers
                 {
                     return BadRequest(string.Join(",", resetPassResult.Errors.Select(s => s.Description)));
                 }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("userrolemanagement")]
+        [Authorize]
+        public IActionResult UserRoleManagement()
+        {
+            try
+            {
+                var model = new UserRoleFormForDto
+                {
+                    Users = _mapper.Map<List<UserForDto>>(_userManager.Users.ToList()),
+                    Roles = _mapper.Map<List<RoleForDto>>(_roleManager.Roles.ToList())
+                };
+
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("addroleforuser")]
+        [Authorize]
+        public async Task<IActionResult> AddRoleForUser([FromBody]UserRoleFormForDto model)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                if (user == null)
+                {
+                    return NotFound("Kullanıcı bulunamadı");
+                }
+
+                if (user.UserName == "ingame")
+                {
+                    return BadRequest("Sistem kullanıcısı için değişiklik yapamazsınız");
+                }
+
+                var roleExist = await _userManager.GetRolesAsync(user);
+                if (roleExist.Contains(model.Role))
+                {
+                    return BadRequest("Atamak istediğiniz rol zaten kullanıcıya verilmiş");
+                }
+
+                await _userManager.AddToRoleAsync(user, model.Role);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("requestaccess/{userName}")]
+        [Authorize]
+        public async Task<IActionResult> RequestAccess(string userName)
+        {
+            try
+            {
+                var systemUser = await _userManager.FindByNameAsync("ingame");
+                if (systemUser == null)
+                {
+                    return BadRequest("Bir problem oldu. Lütfen daha sonra tekrar deneyiniz");
+                }
+
+                var mailBody = $"Merhaba Patron :) <br><br> <b>{userName}</b> isimli kullanıcı hak talep ediyor. İstersen kullanıcı rol yönetiminden rol tanımı yapabilirsin. <br><br> İyi Çalışmalar";
+                Tools.SendEmail(mailBody, systemUser.Email, systemUser.UserName);
 
                 return Ok();
             }

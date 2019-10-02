@@ -52,7 +52,7 @@
                         @if (userRoles.Contains(InGameDemo.Core.Constants.Roles.Admin))
                         {
                             <li><a asp-area="" asp-controller="Category" asp-action="CategoryManagement" id="cateogory-management"><span class="glyphicon glyphicon-align-justify"></span> Kategori Yönetimi</a></li>
-                            <li><a asp-area="" asp-controller="Account" asp-action="Users" id="users"><span class="glyphicon glyphicon-th-large"></span> Kullanıcılar</a></li>
+                            <li><a asp-area="" asp-controller="Account" asp-action="UserRoleManagement" id="users"><span class="glyphicon glyphicon-th-large"></span> Kullanıcı Rol Yönetimi</a></li>
                         }
 
                         <li><a asp-area="" asp-controller="Home" asp-action="Logout" id="logout"><span class="glyphicon glyphicon-log-in"></span> Çıkış Yap</a></li>
