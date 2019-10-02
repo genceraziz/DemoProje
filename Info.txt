@@ -1,0 +1,49 @@
+Scaffold-DbContext "Server=.\SQLEXPRESS;Database=InGameDemo;persist security info=True;Integrated Security=SSPI" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data
+Scaffold-DbContext "Server=.\SQLEXPRESS;Database=InGameDemo;persist security info=True;Integrated Security=SSPI" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data -force
+add-migration create_identity_tables -context ApplicationIdentityContext
+
+------------------------------------------------------------------------------------------------------
+
+1) MVC projesi
+
+Ekranlar=>
+
+* Login
+* Þifremi unuttum
+* Kullanýcý adýný hatýrla (cookie)
+* kategori sayfasý
+* Ürün Listesi
+* Ürün gösterme
+
+2) MVC Web Api
+
+=> Login api / username password OWIN üzerinden login eder.
+=> Þifremi unuttum => OWIN üzerinden þifreyi email atar.
+=> Ürün listesi sayfasý ve kategori sayfasý için aþaðýdaki actionlar olmalýdýr.
+ *  HttpGet => Ürün getir
+ *  HttpPost => Ürün Ekle
+ *  HttpPut => Ürün Güncelle
+ *  HttpDelete => Ürün Sil
+
+=> Ürün detay sayfasý için 
+* HttpGet /Id olarak kullanýlacaktýr.
+
+Özellikle dikkat edilmesi gereken konular;
+
+* Framework tarafýnda EF kullanýlmalý. DB first kullanýlmalý.
+* Db tarafý ms sql olmalý. Kritik gördüðün dilediðin yerlerde performans amaçlý SP kullanabilirsin.
+* Login ve role için Asp.Net Identity tablolarýný kullanmak gerekiyor
+* Ürün sayfasýna sadece product_view yetkisi olanlar girebilir.
+* Ürün gösterme sayfasýna girildiði zaman sayfa url kýsmýnda ürünün adý yazmalý. localhost/m468-tek-atista-vuran-silah/32442 gibi. (Url routing)
+* Ürün tablosunda, id,name,catid,imageurl,price,isactive ve description alanlarý yeterlidir
+* Kategori sayfasý recursive olmalýdýr.  Ýstenildiði kadar kýrýlým olabilir Tablo mimarisini sizin oluþturmanýz gerekmektedir.
+* Webapi tarafý için JWT bearer tokeni kullanabilirsin.
+* Proje .net core üzerinde geliþtirilmeli ve xunit testleri yazýlmalý.
+* (BONUS) Unit test yazarken mock kullanmaný istiyoruz.
+
+3) SQL
+
+Sql de hazýrlanmýþ 2 farklý sp yazýlmasý
+
+1) Kategorili ürün listesi(joinli)
+2) Recursive kategori listesi
