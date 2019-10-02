@@ -145,7 +145,7 @@ namespace InGameDemo.Mvc.Controllers
         }
 
         [HttpGet]
-        [Route("Product/ProductDetail/{id}")]
+        [Route("Product/ProductDetail/{name}/{id}")]
         [Authorize(Roles = "Admin, Product_View")]
         public async Task<IActionResult> ProductDetail(int id)
         {
@@ -275,7 +275,7 @@ namespace InGameDemo.Mvc.Controllers
 
             AddSweetAlert("Tebrikler", "Ürün başarıyla eklendi", Enums.NotificationType.success);
 
-            return RedirectToAction("ProductDetail", new { id });
+            return RedirectToAction("ProductDetail", new { name = Url.UrlFormat(model.Name), id = model.Id });
         }
 
         [HttpDelete("{id}")]

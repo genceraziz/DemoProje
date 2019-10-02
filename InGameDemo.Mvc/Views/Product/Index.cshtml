@@ -29,7 +29,7 @@
                                 <span><span class="glyphicon glyphicon-book"></span> Kategori : @product.CategoryName</span>
                             </div>
                             <div class="pull-right">
-                                <a href="/Product/ProductDetail/@product.Id" class="btn btn-primary" style="margin: 15px 0 0 0;">Ürün Görüntüle</a>
+                                <a href="/Product/ProductDetail/@(Url.UrlFormat(product.Name))/@product.Id" class="btn btn-primary" style="margin: 15px 0 0 0;">Ürün Görüntüle</a>
                             </div>
                         </div>
                     </div>
