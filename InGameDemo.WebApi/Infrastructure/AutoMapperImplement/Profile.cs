@@ -8,7 +8,8 @@ namespace InGameDemo.WebApi.Infrastructure.AutoMapperImplement
         public Profile()
         {
             CreateMap<Categories, CategoryViewForDto>().ReverseMap();
-            CreateMap<Products, ProductViewForDto>().ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Category.Name)).ReverseMap();
+            CreateMap<Products, ProductViewForDto>().ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+            CreateMap<ProductAddForDto, Products>().ForMember(dest => dest.CreateUser, opts => opts.MapFrom(src => src.UserName)).ReverseMap();
         }
     }
 }

@@ -1,0 +1,72 @@
+﻿@model InGameDemo.Mvc.Models.ProductFormForDto
+@{
+    ViewData["Title"] = "Yeni Ürün Ekle";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Yeni Ürün Ekle</h2>
+        <hr />
+    </div>
+    <div class="col-md-8">
+        @if (Model.Categories != null && Model.Categories.Any())
+        {
+            <form asp-action="NewProduct" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="CategoryId"></label>
+                    <select asp-for="CategoryId" class="form-control">
+                        <option value="">Seçiniz</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="File"></label>
+                    <input asp-for="File" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" rows="10" class="form-control"></textarea>
+                </div>
+
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-save"></span> Ekle</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                <p>Henüz kategori yok. Kategori olmadığı için ürün ekleyemezsiniz. Kategori eklemek için <a asp-area="" asp-controller="Category" asp-action="CategoryManagement">tıklayınız</a></p>
+            </div>
+        }
+    </div>
+    <div class="col-md-4">
+        <div class="text-danger" asp-validation-summary="All"></div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input[name='Price']").mask("#.##0,00", { reverse: true });
+        });
+    </script>
+}

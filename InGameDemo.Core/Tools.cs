@@ -1,5 +1,7 @@
 ﻿using InGameDemo.Core.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -16,7 +18,7 @@ namespace InGameDemo.Core
             foreach (var category in categories.Where(x => x.IsParent && !x.ParentId.HasValue))
             {
                 html.AppendLine("<li>");
-                html.AppendLine("<a href=\"/ProductByCategory/" + category.Id +"\"><span class=\"glyphicon glyphicon-chevron-right\"></span>" + category.Name + "</a>");
+                html.AppendLine("<a href=\"/ProductByCategory/" + category.Id + "\"><span class=\"glyphicon glyphicon-chevron-right\"></span>" + category.Name + "</a>");
                 if (categories.Any(a => a.ParentId == category.Id))
                 {
                     html.AppendLine(GenerateSubCategory(categories, category));
@@ -40,7 +42,7 @@ namespace InGameDemo.Core
             {
                 var icon = category.IsParent ? "<span class=\"glyphicon glyphicon-chevron-right\"></span>" : "<span class=\"glyphicon glyphicon-minus\"></span>";
                 html.AppendLine("<li>");
-                html.AppendLine("<a href=\"/ProductByCategory/" + category.Id +"\">" + icon + category.Name + "</a>");
+                html.AppendLine("<a href=\"/ProductByCategory/" + category.Id + "\">" + icon + category.Name + "</a>");
                 if (categories.Any(a => a.ParentId == category.Id))
                 {
                     html.AppendLine(GenerateSubCategory(categories, category));
@@ -52,6 +54,12 @@ namespace InGameDemo.Core
             html.AppendLine("</ul>");
 
             return html.ToString();
+        }
+
+        public static string GetUniqueFileName(string fileName)
+        {
+            fileName = Path.GetFileName(fileName);
+            return Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString().Substring(0, 4) + Path.GetExtension(fileName);
         }
     }
 }

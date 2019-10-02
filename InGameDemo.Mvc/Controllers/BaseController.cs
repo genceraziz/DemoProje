@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Security.Claims;
 using static InGameDemo.Mvc.Models.Enums;
 
 namespace InGameDemo.Mvc.Controllers
@@ -16,6 +17,13 @@ namespace InGameDemo.Mvc.Controllers
             var token = User.Claims.FirstOrDefault(x => x.Type == "Token").Value;
 
             return token;
+        }
+
+        public string GetUserName()
+        {
+            var name = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
+
+            return name;
         }
     }
 }

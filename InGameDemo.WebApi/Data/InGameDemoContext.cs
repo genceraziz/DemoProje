@@ -144,9 +144,7 @@ namespace InGameDemo.WebApi.Data
 
             modelBuilder.Entity<Products>(entity =>
             {
-                entity.Property(e => e.CreateDate)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.Property(e => e.CreateUser)
                     .IsRequired()

@@ -1,0 +1,35 @@
+﻿@model InGameDemo.Core.Models.ProductViewForDto
+@using System.Security.Claims;
+@{
+    ViewData["Title"] = Model.CategoryName + " / " + Model.Name;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@Model.Name</h2>
+        <hr />
+        <div class="col-md-3">
+            <div class="pd-img">
+                <img src="@Model.ImageUrl" class="pd-img" />
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-8">
+            <p><span class="glyphicon glyphicon-tag"></span> @Model.Price.ToString("#.00")</p>
+            <p><span class="glyphicon glyphicon-user"></span> @Model.CreateUser</p>
+            <p><span class="glyphicon glyphicon-pencil"></span> @Model.Description</p>
+            @{
+                var userRole = User.Claims.FirstOrDefault(x => x.Type == "Roles").Value;
+                var userName = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
+                var userRoles = userRole.Split(",");
+            }
+            @if (userRoles.Contains(InGameDemo.Core.Constants.Roles.Admin) || userName == Model.CreateUser)
+            {
+                <div class="pull-left">
+                    <a href="/Product/ProductUpdate/@Model.Id" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Ürünü Düzenle</a>
+                    <a href="/Product/ProductDelete/@Model.Id" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Ürünü Sil</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -18,4 +18,8 @@
     <ProjectReference Include="..\InGameDemo.Core\InGameDemo.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
 </Project>

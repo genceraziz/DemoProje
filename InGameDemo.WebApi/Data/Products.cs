@@ -13,7 +13,7 @@ namespace InGameDemo.WebApi.Data
         public string Description { get; set; }
         public bool IsActive { get; set; }
         public string CreateUser { get; set; }
-        public string CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public virtual Categories Category { get; set; }
     }

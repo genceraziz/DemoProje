@@ -52,9 +52,12 @@ namespace InGameDemo.WebApi.Data
             return await result.ToListAsync();
         }
 
-        public virtual async Task<T> FindBy(Expression<Func<T, bool>> predicate)
+        public virtual async Task<T> FindBy(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
             var result = _context.Set<T>().Where(predicate);
+
+            foreach (var includeExpression in includes)
+                result = result.Include(includeExpression);
 
             return await result.FirstOrDefaultAsync();
         }

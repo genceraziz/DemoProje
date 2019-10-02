@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace InGameDemo.Core.Models
 {
@@ -10,7 +9,6 @@ namespace InGameDemo.Core.Models
         public string Name { get; set; }
 
         public bool IsParent { get; set; }
-
 
         public int? ParentId { get; set; }
 

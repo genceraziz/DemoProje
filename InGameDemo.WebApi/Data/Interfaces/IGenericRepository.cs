@@ -17,7 +17,7 @@ namespace InGameDemo.WebApi.Data.Interfaces
 
         Task<List<T>> SearchBy(Expression<Func<T, bool>> searchBy);
 
-        Task<T> FindBy(Expression<Func<T, bool>> predicate);
+        Task<T> FindBy(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
 
         Task<bool> Update(T entity);
 

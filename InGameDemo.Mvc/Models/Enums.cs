@@ -9,5 +9,12 @@
             warning,
             info
         }
+
+        public enum ResultStatus
+        {
+            Error,
+            Success,
+            Warning
+        }
     }
 }

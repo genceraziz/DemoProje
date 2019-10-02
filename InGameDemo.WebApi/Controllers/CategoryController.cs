@@ -81,6 +81,7 @@ namespace InGameDemo.WebApi.Controllers
                 {
                     return BadRequest("Kategori eklenemedi. Lütfen daha sonra tekrar deneyiniz");
                 }
+
                 return Ok();
             }
             catch (Exception ex)

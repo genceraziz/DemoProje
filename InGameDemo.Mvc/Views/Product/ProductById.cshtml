@@ -9,9 +9,30 @@
         <hr />
         @if (Model.Products != null && Model.Products.Any())
         {
-            <div>
-                Test
-            </div>
+            foreach (var product in Model.Products)
+            {
+                <div class="col-md-4">
+                    <div class="product-box">
+                        <div class="product-img">
+                            <img src="@product.ImageUrl" />
+                        </div>
+                        <div class="product-content">
+                            <h4 class="text-center">@product.Name</h4>
+                            <p>@(!string.IsNullOrEmpty(product.Description) && product.Description.Length > 150 ? product.Description.Substring(0, 150) : product.Description)</p>
+                        </div>
+                        <div class="product-info">
+                            <div class="pull-left">
+                                <span><span class="glyphicon glyphicon-tag"></span> Fiyat : @product.Price.ToString("#.00")</span>
+                                <br />
+                                <span><span class="glyphicon glyphicon-user"></span> Ekleyen : @product.CreateUser</span>
+                            </div>
+                            <div class="pull-right">
+                                <a href="/Product/ProductDetail/@product.Id" class="btn btn-primary">Ürün Görüntüle</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         }
         else
         {
