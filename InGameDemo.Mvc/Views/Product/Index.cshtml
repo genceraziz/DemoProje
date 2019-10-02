@@ -1,7 +1,23 @@
-﻿
+﻿@model IEnumerable<InGameDemo.Core.Models.ProductViewForDto>
 @{
-    ViewData["Title"] = "Tüm Ürüler";
+    ViewData["Title"] = "Tüm Ürünler";
 }
 
-<h2>Tüm Ürünler</h2>
-
+<div class="row">
+    <div class="col-md-12">
+        <h2>Tüm Ürünler</h2>
+        <hr />
+        @if (Model != null && Model.Any())
+        {
+            <div>
+                Test
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                <p>Henüz ürün yok. Ürün eklemek için <a asp-area="" asp-controller="Product" asp-action="NewProduct">tıklayınız</a></p>
+            </div>
+        }
+    </div>
+</div>

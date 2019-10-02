@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using InGameDemo.Core.Models;
+﻿using InGameDemo.Core.Models;
 using InGameDemo.WebApi.Data;
 
 namespace InGameDemo.WebApi.Infrastructure.AutoMapperImplement
@@ -9,6 +8,7 @@ namespace InGameDemo.WebApi.Infrastructure.AutoMapperImplement
         public Profile()
         {
             CreateMap<Categories, CategoryViewForDto>().ReverseMap();
+            CreateMap<Products, ProductViewForDto>().ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Category.Name)).ReverseMap();
         }
     }
 }
