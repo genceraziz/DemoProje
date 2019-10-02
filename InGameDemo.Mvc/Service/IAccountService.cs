@@ -11,5 +11,7 @@ namespace InGameDemo.Mvc.Service
         Task<ServiceResult> AddRoleForUser(string token, UserRoleFormForDto model);
 
         Task<ServiceResult> RequestAccess(string token, string userName);
+
+        Task<ServiceResult> Register(RegisterForDto model);
     }
 }

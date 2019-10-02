@@ -78,5 +78,25 @@ namespace InGameDemo.Mvc.Service
             serRes.ResultStatus.Status = Enums.ResultStatus.Success;
             return serRes;
         }
+
+        public async Task<ServiceResult> Register(RegisterForDto model)
+        {
+            var serRes = new ServiceResult();
+
+            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
+            var httpClinet = _httpClientFactory.CreateClient("ingamedemo");
+            var response = await httpClinet.PostAsync("account/register", new StringContent(json, Encoding.UTF8, "application/json"));
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrEmpty(message)) message = "Beklenmedik bir hata meydana geldi. Lütfen daha sonra tekrar deneyiniz.";
+
+                serRes.ResultStatus.Explanation = message;
+                return serRes;
+            }
+
+            serRes.ResultStatus.Status = Enums.ResultStatus.Success;
+            return serRes;
+        }
     }
 }

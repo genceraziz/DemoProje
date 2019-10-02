@@ -54,23 +54,15 @@ namespace InGameDemo.Mvc.Controllers
                 return View(model);
             }
 
-            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
-            var httpClinet = _httpClientFactory.CreateClient("ingamedemo");
-            var response = await httpClinet.PostAsync("account/register", new StringContent(json, Encoding.UTF8, "application/json"));
-            if (!response.IsSuccessStatusCode)
+            var serRes = await _accountService.Register(model);
+            if (serRes.ResultStatus.Status != Enums.ResultStatus.Success)
             {
-                var message = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrEmpty(message)) message = "Beklenmedik bir hata meydana geldi. Lütfen daha sonra tekrar deneyiniz.";
-                ModelState.AddModelError("", message);
-            }
-            else
-            {
-                AddSweetAlert("Teşekkürler", "Kaydınız başarıyla yapıldı. Bilgileriniz ile giriş yapabilirsiniz.", NotificationType.success);
-
-                return RedirectToAction("Login");
+                ModelState.AddModelError("", serRes.ResultStatus.Explanation);
+                return View(model);
             }
 
-            return View(model);
+            AddSweetAlert("Teşekkürler", "Kaydınız başarıyla yapıldı. Bilgileriniz ile giriş yapabilirsiniz.", NotificationType.success);
+            return RedirectToAction("Login");
         }
 
         [HttpGet]
