@@ -4,11 +4,11 @@ using InGameDemo.WebApi.Data;
 using InGameDemo.WebApi.Data.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InGameDemo.WebApi.Controllers
 {
@@ -34,7 +34,17 @@ namespace InGameDemo.WebApi.Controllers
             {
                 var model = new List<ProductViewForDto>();
 
-                model = _mapper.Map<List<ProductViewForDto>>(await _unitOfWork.ProductRepository.SearchBy(x => x.IsActive));
+                model = _mapper.Map<List<ProductViewForDto>>(_unitOfWork.Context.Products.FromSql("EXECUTE spProducts"));
+
+                var getAllProducts = await _unitOfWork.CategoryRepository.GetAll();
+
+                if (model != null && model.Any() && getAllProducts != null && getAllProducts.Any())
+                {
+                    model.ForEach(x =>
+                    {
+                        x.CategoryName = getAllProducts.FirstOrDefault(c => c.Id == x.CategoryId)?.Name;
+                    });
+                }
 
                 return Ok(model.OrderBy(o => o.Id).ToList());
             }
@@ -56,9 +66,10 @@ namespace InGameDemo.WebApi.Controllers
                     CategoryName = string.Empty
                 };
 
-                model.Products = _mapper.Map<List<ProductViewForDto>>(await _unitOfWork.ProductRepository.SearchBy(x => x.IsActive && x.CategoryId == categoryId));
+                model.Products = _mapper.Map<List<ProductViewForDto>>(await _unitOfWork.ProductRepository.SearchBy(x => x.IsActive && x.CategoryId == categoryId, x => x.Category)).OrderByDescending(o => o.Id).ToList();
+
+                // Products ların boş olma ihtimaline karşı özel olarak çekiliyor.
                 model.CategoryName = _unitOfWork.CategoryRepository.GetById(categoryId).Result.Name;
-                model.Products = model.Products.OrderBy(o => o.Id).ToList();
 
                 return Ok(model);
             }

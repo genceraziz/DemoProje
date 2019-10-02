@@ -45,9 +45,12 @@ namespace InGameDemo.WebApi.Data
             return await result.ToListAsync();
         }
 
-        public virtual async Task<List<T>> SearchBy(Expression<Func<T, bool>> searchBy)
+        public virtual async Task<List<T>> SearchBy(Expression<Func<T, bool>> searchBy, params Expression<Func<T, object>>[] includes)
         {
             var result = _context.Set<T>().Where(searchBy);
+
+            foreach (var includeExpression in includes)
+                result = result.Include(includeExpression);
 
             return await result.ToListAsync();
         }

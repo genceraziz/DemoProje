@@ -25,9 +25,11 @@
                                 <span><span class="glyphicon glyphicon-tag"></span> Fiyat : @product.Price.ToString("#.00")</span>
                                 <br />
                                 <span><span class="glyphicon glyphicon-user"></span> Ekleyen : @product.CreateUser</span>
+                                <br />
+                                <span><span class="glyphicon glyphicon-book"></span> Kategori : @product.CategoryName</span>
                             </div>
                             <div class="pull-right">
-                                <a href="/Product/ProductDetail/@product.Id" class="btn btn-primary">Ürün Görüntüle</a>
+                                <a href="/Product/ProductDetail/@product.Id" class="btn btn-primary" style="margin: 15px 0 0 0;">Ürün Görüntüle</a>
                             </div>
                         </div>
                     </div>

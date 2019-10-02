@@ -15,7 +15,7 @@ namespace InGameDemo.WebApi.Data.Interfaces
 
         Task<List<T>> GetAll(params Expression<Func<T, object>>[] includes);
 
-        Task<List<T>> SearchBy(Expression<Func<T, bool>> searchBy);
+        Task<List<T>> SearchBy(Expression<Func<T, bool>> searchBy, params Expression<Func<T, object>>[] includes);
 
         Task<T> FindBy(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
 
